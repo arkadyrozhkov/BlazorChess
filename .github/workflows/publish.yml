@@ -1,6 +1,6 @@
 name: DeployToGitHubPages
 env:
-  PUBLISH_DIR: bin/Release/netstandard2.1/publish/wwwroot
+  PUBLISH_DIR: Client/bin/Release/netstandard2.1/publish/wwwroot
 
 # Controls when the action will run
 on:
@@ -16,11 +16,11 @@ jobs:
     - name: Publish app
       run: dotnet publish -c Release
 
-    #- name: Rewrite base href
-    #  uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
-    #  with:
-    #    html_path: ${{ env.PUBLISH_DIR }}/index.html
-    #    base_href: /BlazorChess/
+    - name: Rewrite base href
+      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+      with:
+        html_path: ${{ env.PUBLISH_DIR }}/index.html
+        base_href: /BlazorChess/
 
     - name: GitHub Pages
       if: success()
