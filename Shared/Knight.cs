@@ -1,0 +1,26 @@
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
+namespace BlazorChess.Shared {
+    public class Knight : Piece {
+        private void TryAddPosition(List<Position> moves, List<Position> alliesPositions, int x, int y) {
+            if(x >= 0 && x <= 7 && y >= 0 && y <= 7 && !alliesPositions.Any(p => p.X == x && p.Y == y)) {
+                moves.Add(new Position(x, y));
+            }
+        }
+        public override IList<Position> GetAllowableMoves() {
+            var accesableMoves = new List<Position>();
+            var alliesPositions = Game.Pieces.Where(p => p.Color == Color).Select(p => p.Position).ToList();
+            TryAddPosition(accesableMoves, alliesPositions, Position.X + 2, Position.Y + 1);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X + 2, Position.Y - 1);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X - 2, Position.Y + 1);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X - 2, Position.Y - 1);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X + 1, Position.Y + 2);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X + 1, Position.Y - 2);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X - 1, Position.Y + 2);
+            TryAddPosition(accesableMoves, alliesPositions, Position.X - 1, Position.Y - 2);
+            return accesableMoves.AsReadOnly();
+        }
+    }
+}

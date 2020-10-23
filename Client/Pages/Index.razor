@@ -1,0 +1,16 @@
+﻿@inject ChessHubService chessHubService
+@page "/"
+
+<div>
+    Nick name:
+    <input @bind="nickName" size="50" />
+</div>
+<button @onclick="StartGame">NewGame</button>
+
+@code{
+    private string nickName;
+    async void StartGame() {
+        await chessHubService.Init();
+        await chessHubService.FindGame();
+    }
+}
