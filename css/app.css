@@ -1,0 +1,84 @@
+﻿body {
+    margin: 0;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.chess-board-wrapper {
+    background-color: cadetblue;
+    padding: 40px;
+    border: 1px solid #2a2a2a;
+    position: relative;
+}
+
+.chess-board {
+    width: 800px;
+    height: 800px;
+    display: flex;
+    /*flex-wrap: wrap;*/
+    border: 1px solid #2a2a2a;
+    position: relative;
+}
+
+.chess-board-cell {
+    width: 12.5%;
+    height: 12.5%;
+}
+
+    .chess-board-cell.even {
+        background-color: azure;
+    }
+
+    .chess-board-cell.odd {
+        background-color: cadetblue;
+    }
+
+    .chess-board-cell.selected {
+        background-color: palevioletred;
+    }
+
+.figure {
+    width: 12.5%;
+    height: 12.5%;
+    position: absolute;
+}
+
+.letter {
+    width: 12.5%;
+    height: 2.5%;
+    position: absolute;
+    font-size: 18px;
+    text-align: center;
+}
+
+.movement-hint {
+    position: absolute;
+    width: 3.125%;
+    height: 3.125%;
+    border-radius: 50%;
+    background-color: rgba(0,0,0, 0.6);
+}
