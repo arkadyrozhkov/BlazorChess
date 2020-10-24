@@ -1,26 +1,26 @@
-﻿@inject ChessHubService chessHubService
+﻿@inject GameState gameState
 @inject ChessClientService chessService
 
-<div @onclick=PieceClick class="chess-board-cell @GetCellCssClass()"></div>
+<div @onclick=OnClick class="chess-board-cell @GetCellCssClass()"></div>
 @if(Model.Piece != null) {
-    <img class="figure" @onclick=PieceClick style="@GetPieceStyle()" src="@GetImageUrlPath()" />
+    <img class="figure" @onclick=OnClick style="@GetPieceStyle()" src="@GetImageUrlPath()" />
 }
 @if(Model.IsMovementHint) {
-    <div class="movement-hint" @onclick="PieceClick" style="@GetMovementHintStyle()"></div>
+    <div class="movement-hint" @onclick="OnClick" style="@GetMovementHintStyle()"></div>
 }
 
 
 @code {
     [Parameter] public BoardCellModel Model { get; set; }
-    private (int x, int y) GetCoordinates() => chessService.Player.Color == PieceColor.White ? (Model.X, Model.Y) : (-Model.X, -Model.Y);
+    private (int x, int y) GetCoordinates() => gameState.Game.PlayerColor == PieceColor.White ? (Model.X, Model.Y) : (-Model.X, -Model.Y);
     private string GetPieceStyle() {
         var coodrinates = GetCoordinates();
         return $"transform: translate({coodrinates.y * 100}%, {coodrinates.x * 100}%)";
     }
     private string GetMovementHintStyle() {
         var coodrinates = GetCoordinates();
-        int x = coodrinates.x * 400 + (chessService.Player.Color == PieceColor.White ? 150 : -150);
-        int y = coodrinates.y * 400 + (chessService.Player.Color == PieceColor.White ? 150 : -150);
+        int x = coodrinates.x * 400 + (gameState.Game.PlayerColor == PieceColor.White ? 150 : -150);
+        int y = coodrinates.y * 400 + (gameState.Game.PlayerColor == PieceColor.White ? 150 : -150);
         return $"transform: translate({y}%, {x}%)";
     }
     private string GetCellCssClass() {
@@ -35,24 +35,8 @@
     }
     private string GetImageUrlPath() {
         char color = Model.Piece.Color == PieceColor.White ? 'w' : 'b';
-        string imageName = $"{Model.Piece.GetType().Name.ToLower()}-{color}";
+        string imageName = $"{Model.Piece.Type.ToString()}-{color}";
         return $"images/{imageName}.png";
     }
-    private async Task PieceClick() {
-        if(chessService.Player != chessService.Game.CurrentTurn) return;
-        if(chessService.SelectedCellModel != null) {
-            await chessHubService.MoveTo(new Position(chessService.SelectedCellModel.X, chessService.SelectedCellModel.Y), new Position(Model.X, Model.Y));
-            chessService.SelectedCellModel = null;
-            chessService.DropState();
-        }
-        else {
-            if(Model.Piece != null && Model.Piece.Color == chessService.Player.Color) {
-                chessService.SelectedCellModel = Model;
-                Model.IsSelected = true;
-                foreach(var piece in await chessHubService.GetAllowableMoves(new Position(Model.X, Model.Y))) {
-                    chessService.BoardCellModels.First(m => m.X == piece.X && m.Y == piece.Y).IsMovementHint = true;
-                }
-            }
-        }
-    }
+    private async Task OnClick() => await chessService.CellClickedAsync(Model);
 }

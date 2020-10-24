@@ -1,4 +1,4 @@
-﻿using BlazorChess.Shared;
+﻿using BlazorChess.Server.Models;
 using System.Collections.Generic;
 
 namespace BlazorChess.Server.Services {

@@ -1,16 +1,34 @@
-﻿@inject ChessHubService chessHubService
+﻿@inject GameState gameState
+@inject ChessClientService chessClientService
+@inject NavigationManager navigationManager
+@implements IDisposable
 @page "/"
 
-<div>
-    Nick name:
-    <input @bind="nickName" size="50" />
-</div>
-<button @onclick="StartGame">NewGame</button>
+<button @onclick="FindGame">Find a game</button>
+<div>@statusMessage</div>
 
 @code{
-    private string nickName;
-    async void StartGame() {
-        await chessHubService.Init();
-        await chessHubService.FindGame();
+    private string statusMessage = "In Main Menu";
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        gameState.PlayerStatusChanged += StatusChanged;
+    }
+    void IDisposable.Dispose() {
+        gameState.PlayerStatusChanged -= StatusChanged;
+    }
+    private void StatusChanged() {
+        switch(gameState.PlayerStatus) {
+            case (PlayerStatus.FindingGame):
+                statusMessage = "Finding game";
+                break;
+            case (PlayerStatus.PlayingGame):
+                statusMessage = "Game is ready";
+                navigationManager.NavigateTo("/chess");
+                break;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+    async void FindGame() {
+        await chessClientService.FindGameAsync();
     }
 }

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using BlazorChess.Shared;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorChess.Shared {
+namespace BlazorChess.Server.Models {
     public class Pawn : Piece {
         private bool isFirstMove = true;
         public override bool MoveTo(Position position) {

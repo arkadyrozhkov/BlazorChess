@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using BlazorChess.Shared;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorChess.Shared {
+namespace BlazorChess.Server.Models {
     public class Knight : Piece {
         private void TryAddPosition(List<Position> moves, List<Position> alliesPositions, int x, int y) {
             if(x >= 0 && x <= 7 && y >= 0 && y <= 7 && !alliesPositions.Any(p => p.X == x && p.Y == y)) {

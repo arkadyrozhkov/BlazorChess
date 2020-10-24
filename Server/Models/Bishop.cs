@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using BlazorChess.Shared;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorChess.Shared {
-    public class Queen : Piece {
+namespace BlazorChess.Server.Models {
+    public class Bishop : Piece {
         private bool TryAddPosition(List<Position> moves, List<Position> alliesPositions, List<Position> enemiesPositions, int x, int y) {
             if(alliesPositions.Any(p => p.X == x && p.Y == y)) {
                 return false;
@@ -35,26 +35,6 @@ namespace BlazorChess.Shared {
             }
             for(int x = Position.X - 1, y = Position.Y - 1; x >= 0 && y >= 0; x--, y--) {
                 if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, x, y)) {
-                    break;
-                }
-            }
-            for(int i = Position.X + 1; i < 8; i++) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, i, Position.Y)) {
-                    break;
-                }
-            }
-            for(int i = Position.X - 1; i >= 0; i--) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, i, Position.Y)) {
-                    break;
-                }
-            }
-            for(int i = Position.Y + 1; i < 8; i++) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, Position.X, i)) {
-                    break;
-                }
-            }
-            for(int i = Position.Y - 1; i >= 0; i--) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, Position.X, i)) {
                     break;
                 }
             }

@@ -17,7 +17,8 @@ namespace BlazorChess.Client {
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<ChessClientService>();
-            builder.Services.AddScoped<ChessHubService>();            
+            builder.Services.AddScoped<GameState>();
+            builder.Services.AddScoped<IChessBroadCaster, ChessBroadCaster>();
 
             await builder.Build().RunAsync();
         }

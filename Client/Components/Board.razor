@@ -1,12 +1,14 @@
-﻿@inject ChessClientService chessService
+﻿@inject GameState gameState
+@implements IDisposable
 
 <div class="chess-board-wrapper">
     <div class="chess-board" style="@GetChessBoardStyle()">
-        @foreach(var model in chessService.BoardCellModels) {
+        @foreach(var model in gameState.BoardCellModels) {
             <ModelObserver Model="model">
                 <BoardCell Model="model" />
             </ModelObserver>
         }
+        <div>@finishedText</div>
         @{
             int i = 0, j = 8;
             @for(char c = 'A'; c <= 'H'; c++, i++, j--) {
@@ -20,22 +22,43 @@
 
 </div>
 @code{
-    private string GetChessBoardStyle() => chessService.Player.Color == PieceColor.White ? "flex-wrap: wrap; flex-direction: row;" : "flex-wrap: wrap-reverse; flex-direction: row-reverse;";
+    private string finishedText;
+    private string GetChessBoardStyle() => gameState.Game.PlayerColor == PieceColor.White ? "flex-wrap: wrap; flex-direction: row;" : "flex-wrap: wrap-reverse; flex-direction: row-reverse;";
     private string GetTransformStyle(string value) => $"transform: translate({value});";
     private string GetLetter1(int index) {
-        var value = chessService.Player.Color == PieceColor.White ? $"{index * 100}%, -160%" : $"-{index * 100}%, 160%";
+        var value = gameState.Game.PlayerColor == PieceColor.White ? $"{index * 100}%, -160%" : $"-{index * 100}%, 160%";
         return GetTransformStyle(value);
     }
     private string GetLetter2(int index) {
-        var value = chessService.Player.Color == PieceColor.White ? $"{index * 100}%, 4050%" : $"-{index * 100}%, -4050%";
+        var value = gameState.Game.PlayerColor == PieceColor.White ? $"{index * 100}%, 4050%" : $"-{index * 100}%, -4050%";
         return GetTransformStyle(value);
     }
     private string GetNumber1(int index) {
-        var value = chessService.Player.Color == PieceColor.White ? $"770%, {index * 500 + 200}%" : $"-770%, -{index * 500 + 200}%";
+        var value = gameState.Game.PlayerColor == PieceColor.White ? $"770%, {index * 500 + 200}%" : $"-770%, -{index * 500 + 200}%";
         return GetTransformStyle(value);
     }
     private string GetNumber2(int index) {
-        var value = chessService.Player.Color == PieceColor.White ? $"-70%, {index * 500 + 200}%" : $"70%, -{index * 500 + 200}%";
+        var value = gameState.Game.PlayerColor == PieceColor.White ? $"-70%, {index * 500 + 200}%" : $"70%, -{index * 500 + 200}%";
         return GetTransformStyle(value);
+    }
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        gameState.Game.StatusChanged += GameStatusChanged;
+    }
+    private void GameStatusChanged() {
+        switch(gameState.Game.Status) {
+            case GameStatus.Victory:
+                finishedText = "Victory";
+                InvokeAsync(StateHasChanged);
+                break;
+            case GameStatus.Loss:
+                finishedText = "Loss";
+                InvokeAsync(StateHasChanged);
+                break;
+        }
+
+    }
+    void IDisposable.Dispose() {
+        gameState.Game.StatusChanged += GameStatusChanged;
     }
 }

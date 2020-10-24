@@ -1,10 +1,9 @@
-﻿using System;
+﻿using BlazorChess.Shared;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace BlazorChess.Shared {
-    public class Bishop : Piece {
+namespace BlazorChess.Server.Models {
+    public class Rook : Piece {
         private bool TryAddPosition(List<Position> moves, List<Position> alliesPositions, List<Position> enemiesPositions, int x, int y) {
             if(alliesPositions.Any(p => p.X == x && p.Y == y)) {
                 return false;
@@ -19,23 +18,23 @@ namespace BlazorChess.Shared {
             var accesableMoves = new List<Position>();
             var alliesPositions = Game.Pieces.Where(p => p.Color == Color).Select(p => p.Position).ToList();
             var enemiesPositions = Game.Pieces.Where(p => p.Color != Color).Select(p => p.Position).ToList();
-            for(int x = Position.X + 1, y = Position.Y + 1; x < 8 && y < 8; x++, y++) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, x, y)) {
+            for(int i = Position.X + 1; i < 8; i++) {
+                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, i, Position.Y)) {
                     break;
                 }
             }
-            for(int x = Position.X + 1, y = Position.Y - 1; x < 8 && y >= 0; x++, y--) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, x, y)) {
+            for(int i = Position.X - 1; i >= 0; i--) {
+                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, i, Position.Y)) {
                     break;
                 }
             }
-            for(int x = Position.X - 1, y = Position.Y + 1; x >= 0 && y < 8; x--, y++) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, x, y)) {
+            for(int i = Position.Y + 1; i < 8; i++) {
+                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, Position.X, i)) {
                     break;
                 }
             }
-            for(int x = Position.X - 1, y = Position.Y - 1; x >= 0 && y >= 0; x--, y--) {
-                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, x, y)) {
+            for(int i = Position.Y - 1; i >= 0; i--) {
+                if(!TryAddPosition(accesableMoves, alliesPositions, enemiesPositions, Position.X, i)) {
                     break;
                 }
             }
